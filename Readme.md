@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Варвара Жукова](https://up.htmlacademy.ru/javascript/21/user/397653).
-* Наставник: [Алёна Сиприкова](https://htmlacademy.ru/profile/id549115).
+* Наставник: [Алёна Сиприкова](https://htmlacademy.ru/profile/asiprikova).
 
 ---
 
