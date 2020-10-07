@@ -17,6 +17,8 @@ const MAX_ROOMS = 3;
 const MIN_GUESTS = 1;
 const MAX_GUESTS = 3;
 const PIN_WIDTH = 50;
+const MIN_PRICE = 0;
+const MAX_PRICE = 1000000;
 const map = document.querySelector(`.map`);
 const mapWidth = map.offsetWidth;
 const similarPinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
@@ -56,14 +58,18 @@ const generatePinsArray = function () {
 
   for (let i = 0; i < MAX_PINS; i++) {
     let avatarIndex = i + 1;
+    let pinLocation = {
+      x: randomInteger(0, mapWidth - PIN_WIDTH),
+      y: randomInteger(MIN_Y, MAX_Y),
+    };
     const pinItem = {
       'author': {
         'avatar': AVATAR + avatarIndex + AVATAR_TYPE,
       },
       'offer': {
         'title': `Заголовок`,
-        'address': `600, 350`,
-        'price': 500,
+        'address': pinLocation.x + `, ` + pinLocation.y,
+        'price': randomInteger(MIN_PRICE, MAX_PRICE),
         'type': randomArrayItem(TYPES),
         'rooms': randomInteger(MIN_ROOMS, MAX_ROOMS),
         'guests': randomInteger(MIN_GUESTS, MAX_GUESTS),
@@ -74,8 +80,8 @@ const generatePinsArray = function () {
         'photos': randomPhotosArray(),
       },
       'location': {
-        'x': randomInteger(0, mapWidth - PIN_WIDTH),
-        'y': randomInteger(MIN_Y, MAX_Y),
+        'x': pinLocation.x,
+        'y': pinLocation.y,
       }
     };
     pinArray.push(pinItem);
