@@ -20,10 +20,66 @@ const PIN_WIDTH = 50;
 const MIN_PRICE = 0;
 const MAX_PRICE = 1000000;
 const map = document.querySelector(`.map`);
+const form = document.querySelector(`.ad-form`);
 const mapWidth = map.offsetWidth;
 const similarPinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 const similarListElement = document.querySelector(`.map__pins`);
+const mainPin = document.querySelector(`.map__pin--main`);
+const mainPinWidth = mainPin.offsetWidth;
+const mainPinHeight = mainPin.offsetHeight;
+const formElements = document.querySelectorAll(`.ad-form__element`);
+const formHeader = document.querySelector(`.ad-form-header`);
+const formFilters = document.querySelectorAll(`.map__filter`);
+const formFeatures = document.querySelector(`.map__features`);
+const addressField = document.querySelector(`#address`);
 let pins = [];
+
+const getAddressValue = function () {
+  const leftPosition = parseInt(mainPin.style.left, 10);
+  const topPosition = parseInt(mainPin.style.top, 10);
+  const addressValuLeft = leftPosition + (mainPinWidth / 2);
+  const addressValuTop = topPosition + (mainPinHeight / 2);
+  addressField.value = addressValuLeft + `, ` + addressValuTop;
+};
+getAddressValue();
+
+const disableFields = function () {
+  for (let formElement of formElements) {
+    formElement.setAttribute(`disabled`, `disabled`);
+  }
+  for (let formFilter of formFilters) {
+    formFilter.setAttribute(`disabled`, `disabled`);
+  }
+  formHeader.setAttribute(`disabled`, `disabled`);
+  formFeatures.setAttribute(`disabled`, `disabled`);
+};
+disableFields();
+
+const activatePage = function () {
+  map.classList.remove(`map--faded`);
+  form.classList.remove(`ad-form--disabled`);
+
+  for (let formElement of formElements) {
+    formElement.removeAttribute(`disabled`, `disabled`);
+  }
+  for (let formFilter of formFilters) {
+    formFilter.removeAttribute(`disabled`, `disabled`);
+  }
+  formHeader.removeAttribute(`disabled`, `disabled`);
+  formFeatures.removeAttribute(`disabled`, `disabled`);
+};
+
+mainPin.addEventListener(`mousedown`, function (evt) {
+  if (evt.which === 1) {
+    activatePage();
+  }
+});
+
+mainPin.addEventListener(`keydown`, function (evt) {
+  if (evt.key === `Enter`) {
+    activatePage();
+  }
+});
 
 const randomInteger = function (min, max) {
   let randomNumber = min + Math.random() * (max + 1 - min);
@@ -113,5 +169,4 @@ const generateElements = function () {
   similarListElement.appendChild(fragment);
 };
 
-map.classList.remove(`map--faded`);
 generateElements();
