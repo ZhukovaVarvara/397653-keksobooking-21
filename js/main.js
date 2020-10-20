@@ -26,6 +26,7 @@ const similarPinTemplate = document.querySelector(`#pin`).content.querySelector(
 const similarListElement = document.querySelector(`.map__pins`);
 const similarMapCardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
 let pins = [];
+let offerType;
 
 const randomInteger = function (min, max) {
   let randomNumber = min + Math.random() * (max + 1 - min);
@@ -119,7 +120,7 @@ map.classList.remove(`map--faded`);
 generateElements();
 
 let firstElement = pins[0];
-let offerType;
+
 const getOfferType = function () {
   if (firstElement.offer.type === `palace`) {
     offerType = `Дворец`;
@@ -136,9 +137,25 @@ const getOfferType = function () {
   }
 };
 
+const renderFeatures = function () {
+  const popupFeature = document.createElement(`li`);
+  popupFeature.classList.add(`popup__feature`);
+  return popupFeature;
+};
+
+const generateFeatures = function () {
+  const fragment = document.createDocumentFragment();
+  for (let i = 0; i < firstElement.offer.features.length; i++) {
+    fragment.appendChild(renderFeatures());
+  }
+  similarListElement.appendChild(fragment);
+};
+generateFeatures();
+
 const renderCard = function () {
   const cardElement = similarMapCardTemplate.cloneNode(true);
 
+  cardElement.querySelector(`.popup__features`).innerHTML = ``;
   cardElement.querySelector(`.popup__title`).textContent = firstElement.offer.title;
   cardElement.querySelector(`.popup__text--address`).textContent = firstElement.offer.address;
   cardElement.querySelector(`.popup__text--price`).textContent = firstElement.offer.price + `₽/ночь`;
@@ -161,6 +178,13 @@ const renderCard = function () {
       photoElement.src = firstElement.offer.photos[i];
       photos.appendChild(photoElement);
     }
+  }
+
+  for (let i = 0; i < firstElement.offer.features.length; i++) {
+    const popupFeature = document.createElement(`li`);
+    popupFeature.classList.add(`popup__feature`);
+    popupFeature.classList.add(`popup__feature--` + firstElement.offer.features[i]);
+    cardElement.querySelector(`.popup__features`).appendChild(popupFeature);
   }
 
   return cardElement;
