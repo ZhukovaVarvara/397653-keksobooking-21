@@ -32,6 +32,8 @@ const formHeader = document.querySelector(`.ad-form-header`);
 const formFilters = document.querySelectorAll(`.map__filter`);
 const formFeatures = document.querySelector(`.map__features`);
 const addressField = document.querySelector(`#address`);
+const roomNumber = document.querySelector(`#room_number`);
+const capacity = document.querySelector(`#capacity`);
 let pins = [];
 
 const getAddressValue = function () {
@@ -78,6 +80,12 @@ mainPin.addEventListener(`mousedown`, function (evt) {
 mainPin.addEventListener(`keydown`, function (evt) {
   if (evt.key === `Enter`) {
     activatePage();
+  }
+});
+
+capacity.addEventListener(`change`, function () {
+  if (roomNumber.value === 1 && capacity.value === 2) {
+    capacity.setCustomValidity(`Обязательное поле`);
   }
 });
 
