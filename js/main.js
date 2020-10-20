@@ -57,20 +57,6 @@ const disableFields = function () {
 };
 disableFields();
 
-const activatePage = function () {
-  map.classList.remove(`map--faded`);
-  form.classList.remove(`ad-form--disabled`);
-
-  for (let formElement of formElements) {
-    formElement.removeAttribute(`disabled`, `disabled`);
-  }
-  for (let formFilter of formFilters) {
-    formFilter.removeAttribute(`disabled`, `disabled`);
-  }
-  formHeader.removeAttribute(`disabled`, `disabled`);
-  formFeatures.removeAttribute(`disabled`, `disabled`);
-};
-
 mainPin.addEventListener(`mousedown`, function (evt) {
   if (evt.which === 1) {
     activatePage();
@@ -80,12 +66,6 @@ mainPin.addEventListener(`mousedown`, function (evt) {
 mainPin.addEventListener(`keydown`, function (evt) {
   if (evt.key === `Enter`) {
     activatePage();
-  }
-});
-
-capacity.addEventListener(`change`, function () {
-  if (roomNumber.value === 1 && capacity.value === 2) {
-    capacity.setCustomValidity(`Обязательное поле`);
   }
 });
 
@@ -178,3 +158,39 @@ const generateElements = function () {
 };
 
 generateElements();
+
+const setCapacityValidity = function () {
+  if (roomNumber.value === `1` && capacity.value !== `1`) {
+    capacity.setCustomValidity(`Недопустимый вариант`);
+  } else if (roomNumber.value === `2` && capacity.value !== `2` && capacity.value !== `1`) {
+    capacity.setCustomValidity(`Недопустимый вариант`);
+  } else if (roomNumber.value === `3` && capacity.value === `0`) {
+    capacity.setCustomValidity(`Недопустимый вариант`);
+  } else if (roomNumber.value === `100` && capacity.value !== `0`) {
+    capacity.setCustomValidity(`Недопустимый вариант`);
+  } else {
+    capacity.setCustomValidity(``);
+  }
+};
+
+setCapacityValidity();
+roomNumber.addEventListener(`change`, function () {
+  setCapacityValidity();
+});
+capacity.addEventListener(`change`, function () {
+  setCapacityValidity();
+});
+
+const activatePage = function () {
+  map.classList.remove(`map--faded`);
+  form.classList.remove(`ad-form--disabled`);
+
+  for (let formElement of formElements) {
+    formElement.removeAttribute(`disabled`, `disabled`);
+  }
+  for (let formFilter of formFilters) {
+    formFilter.removeAttribute(`disabled`, `disabled`);
+  }
+  formHeader.removeAttribute(`disabled`, `disabled`);
+  formFeatures.removeAttribute(`disabled`, `disabled`);
+};
