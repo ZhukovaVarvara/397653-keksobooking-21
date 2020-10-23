@@ -230,7 +230,11 @@ const renderCard = function (card) {
   cardElement.querySelector(`.popup__text--price`).textContent = card.offer.price + `₽/ночь`;
   cardElement.querySelector(`.popup__type`).textContent = mapOfferType[card.offer.type];
   cardElement.querySelector(`.popup__text--capacity`).textContent = card.offer.rooms + ` комнаты для ` + card.offer.guests + ` гостей`;
-  cardElement.querySelector(`.popup__text--time`).textContent = `Заезд после ` + card.offer.checkin + `, выезд до ` + card.offer.checkout;
+  if (card.offer.checkin && card.offer.checkout) {
+    cardElement.querySelector(`.popup__text--time`).textContent = `Заезд после ` + card.offer.checkin + `, выезд до ` + card.offer.checkout;
+  } else {
+    cardElement.querySelector(`.popup__text--time`).remove();
+  }
   cardElement.querySelector(`.popup__description`).textContent = card.offer.description;
   cardElement.querySelector(`.popup__avatar`).src = card.author.avatar;
 
