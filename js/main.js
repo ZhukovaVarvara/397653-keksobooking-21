@@ -19,6 +19,8 @@ const MAX_GUESTS = 3;
 const PIN_WIDTH = 50;
 const MIN_PRICE = 0;
 const MAX_PRICE = 1000000;
+const MAX_ROOMS_VALUE = 100;
+const MIN_CAPACITY_VALUE = 0;
 const map = document.querySelector(`.map`);
 const form = document.querySelector(`.ad-form`);
 const mapWidth = map.offsetWidth;
@@ -36,29 +38,28 @@ const roomNumber = document.querySelector(`#room_number`);
 const capacity = document.querySelector(`#capacity`);
 let pins = [];
 
-const getAddressValue = function () {
+const disableFields = function () {
+  for (let formElement of formElements) {
+    formElement.setAttribute(`disabled`, true);
+  }
+  for (let formFilter of formFilters) {
+    formFilter.setAttribute(`disabled`, true);
+  }
+  formHeader.setAttribute(`disabled`, true);
+  formFeatures.setAttribute(`disabled`, true);
+};
+disableFields();
+
+const setAddressValue = function () {
   const leftPosition = parseInt(mainPin.style.left, 10);
   const topPosition = parseInt(mainPin.style.top, 10);
   const addressValuLeft = leftPosition + (mainPinWidth / 2);
   const addressValuTop = topPosition + (mainPinHeight / 2);
-  addressField.value = addressValuLeft + `, ` + addressValuTop;
+  addressField.value = `${addressValuLeft}, ${addressValuTop}`;
 };
-getAddressValue();
-
-const disableFields = function () {
-  for (let formElement of formElements) {
-    formElement.setAttribute(`disabled`, `disabled`);
-  }
-  for (let formFilter of formFilters) {
-    formFilter.setAttribute(`disabled`, `disabled`);
-  }
-  formHeader.setAttribute(`disabled`, `disabled`);
-  formFeatures.setAttribute(`disabled`, `disabled`);
-};
-disableFields();
 
 mainPin.addEventListener(`mousedown`, function (evt) {
-  if (evt.which === 1) {
+  if (evt.button === 0) {
     activatePage();
   }
 });
@@ -157,40 +158,36 @@ const generateElements = function () {
   similarListElement.appendChild(fragment);
 };
 
-generateElements();
-
-const setCapacityValidity = function () {
-  if (roomNumber.value === `1` && capacity.value !== `1`) {
-    capacity.setCustomValidity(`Недопустимый вариант`);
-  } else if (roomNumber.value === `2` && capacity.value !== `2` && capacity.value !== `1`) {
-    capacity.setCustomValidity(`Недопустимый вариант`);
-  } else if (roomNumber.value === `3` && capacity.value === `0`) {
-    capacity.setCustomValidity(`Недопустимый вариант`);
-  } else if (roomNumber.value === `100` && capacity.value !== `0`) {
-    capacity.setCustomValidity(`Недопустимый вариант`);
+const onChangeCapacityValidity = function (evt) {
+  let roomNumberValue = Number(roomNumber.value);
+  let capacityValue = Number(capacity.value);
+  if (roomNumberValue === MAX_ROOMS_VALUE && capacityValue !== MIN_CAPACITY_VALUE || roomNumberValue !== MAX_ROOMS_VALUE && capacityValue === MIN_CAPACITY_VALUE) {
+    capacity.setCustomValidity(`100 комнат - не для гостей`);
+  } else if (roomNumberValue < capacityValue) {
+    capacity.setCustomValidity(`Количество гостей не может быть больше количества комнат`);
   } else {
     capacity.setCustomValidity(``);
   }
 };
 
-setCapacityValidity();
-roomNumber.addEventListener(`change`, function () {
-  setCapacityValidity();
-});
-capacity.addEventListener(`change`, function () {
-  setCapacityValidity();
-});
+roomNumber.addEventListener(`change`, onChangeCapacityValidity);
+capacity.addEventListener(`change`, onChangeCapacityValidity);
+
+const init = function () {
+  setAddressValue();
+  for (let formElement of formElements) {
+    formElement.removeAttribute(`disabled`);
+  }
+  for (let formFilter of formFilters) {
+    formFilter.removeAttribute(`disabled`);
+  }
+  formHeader.removeAttribute(`disabled`);
+  formFeatures.removeAttribute(`disabled`);
+};
 
 const activatePage = function () {
   map.classList.remove(`map--faded`);
   form.classList.remove(`ad-form--disabled`);
-
-  for (let formElement of formElements) {
-    formElement.removeAttribute(`disabled`, `disabled`);
-  }
-  for (let formFilter of formFilters) {
-    formFilter.removeAttribute(`disabled`, `disabled`);
-  }
-  formHeader.removeAttribute(`disabled`, `disabled`);
-  formFeatures.removeAttribute(`disabled`, `disabled`);
+  generateElements();
+  init();
 };
