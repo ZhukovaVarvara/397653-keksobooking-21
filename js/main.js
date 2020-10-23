@@ -60,17 +60,25 @@ const setAddressValue = function () {
   addressField.value = `${addressValuLeft}, ${addressValuTop}`;
 };
 
-mainPin.addEventListener(`mousedown`, function (evt) {
-  if (evt.button === 0) {
-    activatePage();
+const init = function () {
+  setAddressValue();
+  for (let formElement of formElements) {
+    formElement.removeAttribute(`disabled`);
   }
-});
+  for (let formFilter of formFilters) {
+    formFilter.removeAttribute(`disabled`);
+  }
+  formHeader.removeAttribute(`disabled`);
+  formFeatures.removeAttribute(`disabled`);
+};
 
-mainPin.addEventListener(`keydown`, function (evt) {
-  if (evt.key === `Enter`) {
-    activatePage();
-  }
-});
+const activatePage = function () {
+  map.classList.remove(`map--faded`);
+  form.classList.remove(`ad-form--disabled`);
+  generateElements();
+  init();
+  generateCards();
+};
 
 const randomInteger = function (min, max) {
   let randomNumber = min + Math.random() * (max + 1 - min);
@@ -172,30 +180,6 @@ const onChangeCapacityValidity = function () {
   }
 };
 
-roomNumber.addEventListener(`change`, onChangeCapacityValidity);
-capacity.addEventListener(`change`, onChangeCapacityValidity);
-
-const init = function () {
-  setAddressValue();
-  for (let formElement of formElements) {
-    formElement.removeAttribute(`disabled`);
-  }
-  for (let formFilter of formFilters) {
-    formFilter.removeAttribute(`disabled`);
-  }
-  formHeader.removeAttribute(`disabled`);
-  formFeatures.removeAttribute(`disabled`);
-};
-
-const activatePage = function () {
-  map.classList.remove(`map--faded`);
-  form.classList.remove(`ad-form--disabled`);
-  generateElements();
-  init();
-};
-map.classList.remove(`map--faded`);
-generateElements();
-
 let firstElement = pins[0];
 
 const mapOfferType = {
@@ -258,4 +242,18 @@ const generateCards = function () {
   fragment.appendChild(renderCard(firstElement));
   map.insertBefore(fragment, mapFilter);
 };
-generateCards();
+
+roomNumber.addEventListener(`change`, onChangeCapacityValidity);
+capacity.addEventListener(`change`, onChangeCapacityValidity);
+
+mainPin.addEventListener(`mousedown`, function (evt) {
+  if (evt.button === 0) {
+    activatePage();
+  }
+});
+
+mainPin.addEventListener(`keydown`, function (evt) {
+  if (evt.key === `Enter`) {
+    activatePage();
+  }
+});
